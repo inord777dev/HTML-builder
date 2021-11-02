@@ -86,11 +86,14 @@ async function copyDirectory(srcDir, destDir) {
 async function build() {
   try {
     const root = path.join(__dirname, 'project-dist');
-    if (await fileExists(root)) {
-      await rmdir(root, { maxRetries: 10, recursive: true, retryDelay: 200 });
-    } 
+    // if (await fileExists(root)) {
+    //   await rmdir(root, { maxRetries: 10, recursive: true, retryDelay: 200 });
+    // } 
 
-    await mkdir(root, { recursive: true });
+    if (!await fileExists(root)) {
+      await mkdir(root, { recursive: true });
+    }
+    
     await createBundle(path.join(root, 'style.css'), path.join(__dirname, 'styles'));
     await copyDirectory(path.join(__dirname, 'assets'), path.join(root, 'assets'));
 
