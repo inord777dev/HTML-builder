@@ -15,7 +15,7 @@ stdin.on('data', data => {
       out = fs.createWriteStream(path.join(__dirname, 'message.txt'));
     }
     out.write(message);
-    stdout.write('Leave yet message or type \'exit\' (press Ctrl + C) for finish: ');
+    stdout.write('Leave new message or type \'exit\' (press Ctrl + C) for finish: ');
   }
 });
 

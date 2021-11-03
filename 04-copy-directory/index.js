@@ -6,8 +6,8 @@ async function copyDirectory(srcDir, destDir, callback) {
   try {
     const dirents = await readdir(srcDir, { withFileTypes: true });
     await Promise.all(dirents.map(async (dirent) => {
-      const src = path.resolve(srcDir, dirent.name),
-        desc = path.resolve(destDir, dirent.name);
+      const src = path.join(srcDir, dirent.name),
+        desc = path.join(destDir, dirent.name);
       if (dirent.isDirectory()) {
         await copyDirectory(src, desc)
       } else {
