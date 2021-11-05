@@ -4,6 +4,12 @@ const { readdir, mkdir, copyFile, access } = require('fs/promises');
 
 async function copyDirectory(srcDir, destDir, callback) {
   try {
+    if (callback) {
+      if (await fileExists(destDir)) {
+        await removeDir(destDir);
+      }
+      await mkdir(destDir, { recursive: true });
+    }
     const dirents = await readdir(srcDir, { withFileTypes: true });
     await Promise.all(dirents.map(async (dirent) => {
       const src = path.join(srcDir, dirent.name),
@@ -11,8 +17,7 @@ async function copyDirectory(srcDir, destDir, callback) {
       if (dirent.isDirectory()) {
         await copyDirectory(src, desc)
       } else {
-        let isExists = await fileExists(destDir);
-        if (!isExists) {
+        if (!await fileExists(destDir)) {
           await mkdir(destDir, { recursive: true });
         }
         await copyFile(src, desc);
@@ -33,9 +38,18 @@ async function fileExists(file) {
     .catch(() => false)
 }
 
+async function removeDir(dest) {
+  return await new Promise((resolve, rejects) => {
+    fs.rm(dest, { maxRetries: 10, recursive: true, retryDelay: 200 },
+      err => {
+        if (err) rejects(err);
+        resolve();
+      });
+  })
+}
+
 copyDirectory(
   path.join(__dirname, 'files'),
   path.join(__dirname, 'files-copy'),
   () => { console.log('Copy completed successfully!') }
 )
-
