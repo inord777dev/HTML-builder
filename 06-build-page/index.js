@@ -12,6 +12,16 @@ async function createEmptyFile(fileName) {
   })
 }
 
+async function removeDir(dest) {
+  return await new Promise((resolve, rejects) => {
+    fs.rm(dest, { maxRetries: 10, recursive: true, retryDelay: 200 },
+      err => {
+        if (err) rejects(err);
+        resolve();
+      });
+  })
+}
+
 async function bundleFrom(dest, dirName) {
   const dirents = await readdir(dirName, { withFileTypes: true });
   await Promise.all(dirents.map(async (dirent) => {
@@ -86,9 +96,9 @@ async function copyDirectory(srcDir, destDir) {
 async function build() {
   try {
     const root = path.join(__dirname, 'project-dist');
-    // if (await fileExists(root)) {
-    //   await rmdir(root, { maxRetries: 10, recursive: true, retryDelay: 200 });
-    // } 
+    if (await fileExists(root)) {
+      await removeDir(root);
+    } 
 
     if (!await fileExists(root)) {
       await mkdir(root, { recursive: true });
