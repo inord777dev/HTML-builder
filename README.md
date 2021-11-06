@@ -1,3 +1,11 @@
+# Самооценка 150/150
+- 01 read file - **20 баллов**
+- 02 write file - **20 баллов**
+- 03 files in folder - **20 баллов**
+- 04 copy directory - **20 баллов**
+- 05 merge styles - **20 баллов**
+- 06 build page - **50 баллов**
+
 # HTML builder
 ---
 
